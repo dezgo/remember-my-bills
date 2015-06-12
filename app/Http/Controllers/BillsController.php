@@ -5,6 +5,7 @@ use App\Bill;
 use App\Http\Requests;
 use App\Http\Requests\BillRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\BillRepositoryInterface;
 
 /**
  * Class BillsController
@@ -16,9 +17,10 @@ class BillsController extends Controller {
 
     /**
      * Ensure users are authenticated before using this controller
-     * @param null $bills
+     *
+     * @param BillRepositoryInterface $bills
      */
-	public function __construct(BillRepository $bills = null)
+	public function __construct(BillRepositoryInterface $bills = null)
 	{
 		$this->middleware('auth');
         if ($bills)
@@ -38,7 +40,8 @@ class BillsController extends Controller {
 	 */
 	public function index()
 	{
-		$bills = $this->bills->sortBy('next_due');
+        //$bills = $this->bills->sortBy('next_due');
+        $bills = $this->bills;
 
         return view('bills.index', compact('bills'));
 	}
@@ -85,7 +88,7 @@ class BillsController extends Controller {
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param  int  $id
+     * @param Bill $bill
 	 * @return Response
 	 */
 	public function edit(Bill $bill)
@@ -97,7 +100,8 @@ class BillsController extends Controller {
 	/**
 	 * Update the specified resource in storage.
 	 *
-	 * @param  int  $id
+     * @param Bill $bill
+     * @param BillRequest $request
 	 * @return Response
 	 */
 	public function update(Bill $bill, BillRequest $request)
@@ -110,7 +114,7 @@ class BillsController extends Controller {
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  int  $id
+     * @param Bill $bill
 	 * @return Response
 	 */
 	public function destroy(Bill $bill)

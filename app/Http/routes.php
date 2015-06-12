@@ -10,6 +10,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+App::bind('App\Repositories\BillRepositoryInterface', 'App\Repositories\EloquentBillRepository');
 
 Route::get('/', 'BillsController@index');
 
