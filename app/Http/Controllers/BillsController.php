@@ -12,23 +12,13 @@ use Illuminate\Support\Facades\Auth;
  */
 class BillsController extends Controller {
 
-    protected $bills;
-
     /**
      * Ensure users are authenticated before using this controller
      * @param null $bills
      */
-	public function __construct(BillRepository $bills = null)
+	public function __construct()
 	{
 		$this->middleware('auth');
-        if ($bills)
-        {
-            $this->bills = $bills;
-        }
-        elseif (Auth::check())
-        {
-            $this->bills = Auth::user()->bills;
-        }
 	}
 
 	/**
@@ -38,7 +28,7 @@ class BillsController extends Controller {
 	 */
 	public function index()
 	{
-		$bills = $this->bills->sortBy('next_due');
+		$bills = Auth::user()->bills->sortBy('next_due');
 
         return view('bills.index', compact('bills'));
 	}
