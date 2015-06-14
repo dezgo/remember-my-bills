@@ -17,7 +17,6 @@ class Bill extends Model {
      */
     protected $fillable = [
 		'description',
-        'account',
 		'last_due',
 		'times_per_year',
 		'account_id',

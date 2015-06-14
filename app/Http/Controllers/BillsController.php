@@ -1,6 +1,5 @@
 <?php namespace App\Http\Controllers;
 
-use App\Account;
 use App\Bill;
 use App\Http\Requests;
 use App\Http\Requests\BillRequest;
@@ -40,7 +39,7 @@ class BillsController extends Controller {
 	 */
 	public function create()
 	{
-		$accounts = Account::getSelectData();
+		$accounts = $this->accounts_select_list();
 		return view('bills.create', compact('accounts'));
 	}
 
@@ -73,6 +72,17 @@ class BillsController extends Controller {
 	}
 
 	/**
+	 * Return select list for use in displaying accounts combo box
+	 *
+	 * @return mixed
+	 */
+	private function accounts_select_list()
+	{
+		$user = Auth::user();
+		return $user->accounts->lists('description', 'id');
+	}
+
+	/**
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param  int  $id
@@ -80,7 +90,8 @@ class BillsController extends Controller {
 	 */
 	public function edit(Bill $bill)
 	{
-        $accounts = Account::getSelectData();
+		$accounts = $this->accounts_select_list();
+		//dd($accounts);
 		return view('bills.edit', compact('bill', 'accounts'));
 	}
 

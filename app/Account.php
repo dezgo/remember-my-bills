@@ -27,16 +27,6 @@ class Account extends Model {
 	}
 
 	/**
-	 * Get the array required for a HTML select dropdown
-	 *
-	 * @return array
-	 */
-	public static function getSelectData()
-	{
-		return Auth::user()->accounts()->lists('description', 'id')->all();
-	}
-
-	/**
 	 * An account has many bills
 	 *
 	 * @return mixed

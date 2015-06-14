@@ -18,6 +18,8 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
+Route::resource('accounts', 'AccountsController');
+
 Route::resource('bills', 'BillsController');
 Route::bind('bills', function($value, $route) {
 	return App\Bills::whereSlug($value)->first();

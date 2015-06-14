@@ -1,5 +1,7 @@
 <?php
 use Illuminate\Database\Seeder;
+use App\User;
+use Faker\Factory as Faker;
 
 class UserTableSeeder extends Seeder
 {
@@ -9,24 +11,14 @@ class UserTableSeeder extends Seeder
 		// clear table before seeding
 		DB::table('users')->delete();
 
-		$users = array(
-			['id' => 1,
-			 'name' => 'Derek',
-			 'email' => 'derek@example.com',
-			 'password' => bcrypt('password'),
-			 'created_at' => \Carbon\Carbon::now(),
-			 'updated_at' => \Carbon\Carbon::now()
-			],
-			['id' => 2,
-			 'name' => 'Paul',
-			 'email' => 'paul@example.com',
-			 'password' => bcrypt('password'),
-			 'created_at' => \Carbon\Carbon::now(),
-			 'updated_at' => \Carbon\Carbon::now()
-			]
-		);
-
-		// run the seeder
-		DB::table('users')->insert($users);
+		$faker = Faker::create();
+		foreach(range(1, 50) as $index)
+		{
+			User::create([
+				'name' => $faker->userName(),
+				'email' => $faker->email,
+				'password' => bcrypt('password'),
+			]);
+		}
 	}
 }

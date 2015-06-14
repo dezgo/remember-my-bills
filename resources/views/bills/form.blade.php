@@ -19,7 +19,7 @@
 <!-- Account Form Input -->
 <div class="from-group">
     {!! Form::label('account', 'Account: ') !!}
-    {!! Form::select('account_id', App\Account::getSelectData(), null, ['class' => 'form-control']) !!}
+    {!! Form::select('account_id', $accounts, null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Direct Debit Form Input -->

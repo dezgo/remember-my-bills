@@ -19,15 +19,8 @@ class AccountTest extends TestCase
         $this->assertBelongsTo('user', 'App\Account');
     }
 
-//    public function testGetSelectData()
-//    {
-//        Auth::shouldReceive('user')->andReturn($user = Mockery::mock('App\User'));
-//        $user->shouldReceive('accounts')->once()->andReturn($user->hasMany('App\Account'));
-//        $accounts = Account::getSelectData();
-//
-//        $this->assertNotEmpty($accounts);
-//    }
-    public function test(){
-        
+    public function testHasManyBills()
+    {
+        $this->assertHasMany('bills', 'App\Account');
     }
 }

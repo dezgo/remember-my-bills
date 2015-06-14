@@ -1,5 +1,8 @@
 <?php
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
+use App\User;
+use App\Account;
 
 class AccountsTableSeeder extends Seeder
 {
@@ -9,46 +12,17 @@ class AccountsTableSeeder extends Seeder
         // clear table before seeding
         DB::table('accounts')->delete();
 
-        $accounts = array(
-            ['id' => 1,
-             'user_id' => 1,
-             'description' => 'Credit-D',
-             'created_at' => \Carbon\Carbon::now(),
-             'updated_at' => \Carbon\Carbon::now()
-            ],
-            ['id' => 2,
-             'user_id' => 1,
-             'description' => 'Savings-D',
-             'created_at' => \Carbon\Carbon::now(),
-             'updated_at' => \Carbon\Carbon::now()
-            ],
-            ['id' => 3,
-             'user_id' => 1,
-             'description' => 'Cheque-D',
-             'created_at' => \Carbon\Carbon::now(),
-             'updated_at' => \Carbon\Carbon::now()
-            ],
-            ['id' => 4,
-             'user_id' => 2,
-             'description' => 'Credit-P',
-             'created_at' => \Carbon\Carbon::now(),
-             'updated_at' => \Carbon\Carbon::now()
-            ],
-            ['id' => 5,
-              'user_id' => 2,
-              'description' => 'Savings-P',
-              'created_at' => \Carbon\Carbon::now(),
-              'updated_at' => \Carbon\Carbon::now()
-            ],
-            ['id' => 6,
-             'user_id' => 2,
-             'description' => 'Cheque-P',
-             'created_at' => \Carbon\Carbon::now(),
-             'updated_at' => \Carbon\Carbon::now()
-            ]
-        );
-
-        // run the seeder
-        DB::table('accounts')->insert($accounts);
+        $faker = Faker::create();
+        $users = User::all();
+        foreach($users as $user)
+        {
+            foreach(range(1,4) as $index1)
+            {
+                Account::create([
+                    'user_id' => $user->id,
+                    'description' => $faker->word,
+                ]);
+            }
+        }
     }
 }
