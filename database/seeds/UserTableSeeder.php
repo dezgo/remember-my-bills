@@ -1,7 +1,5 @@
 <?php
 use Illuminate\Database\Seeder;
-use App\User;
-use Faker\Factory as Faker;
 
 class UserTableSeeder extends Seeder
 {
@@ -11,14 +9,7 @@ class UserTableSeeder extends Seeder
 		// clear table before seeding
 		DB::table('users')->delete();
 
-		$faker = Faker::create();
-		foreach(range(1, 50) as $index)
-		{
-			User::create([
-				'name' => $faker->userName(),
-				'email' => $faker->email,
-				'password' => bcrypt('password'),
-			]);
-		}
+		// and see using model factory
+		$user = factory('App\User', 50)->create();
 	}
 }

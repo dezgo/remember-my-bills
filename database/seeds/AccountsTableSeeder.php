@@ -1,8 +1,6 @@
 <?php
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 use App\User;
-use App\Account;
 
 class AccountsTableSeeder extends Seeder
 {
@@ -12,17 +10,10 @@ class AccountsTableSeeder extends Seeder
         // clear table before seeding
         DB::table('accounts')->delete();
 
-        $faker = Faker::create();
         $users = User::all();
         foreach($users as $user)
         {
-            foreach(range(1,4) as $index1)
-            {
-                Account::create([
-                    'user_id' => $user->id,
-                    'description' => $faker->word,
-                ]);
-            }
+            factory('App\Account',4)->create(['user_id' => $user->id]);
         }
     }
 }

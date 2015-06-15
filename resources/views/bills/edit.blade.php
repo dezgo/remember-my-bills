@@ -8,7 +8,7 @@
     {!! Form::model($bill, ['method' => 'PATCH', 'action' => ['BillsController@update', $bill->id]]) !!}
     @include ('bills.form', ['submitButtonText' => 'Update Bill'])
     {!! Form::close() !!}
-<br>
+    <br>
     {!! Form::model($bill, ['method' => 'DELETE', 'action' => ['BillsController@destroy', $bill->id]]) !!}
 
     <!-- Add Bill Form Input -->

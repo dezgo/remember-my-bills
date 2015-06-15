@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Bill;
 use App\Http\Requests;
@@ -91,7 +93,6 @@ class BillsController extends Controller {
 	public function edit(Bill $bill)
 	{
 		$accounts = $this->accounts_select_list();
-		//dd($accounts);
 		return view('bills.edit', compact('bill', 'accounts'));
 	}
 

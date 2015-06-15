@@ -15,23 +15,23 @@ $factory->define(App\User::class, function ($faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->email,
-        'password' => str_random(10),
+        'password' => bcrypt('password'),
         'remember_token' => str_random(10),
     ];
 });
 
 $factory->define(App\Bill::class, function ($faker) {
-    $user = factory('App\User')->make();
-    $account = factory('App\Account')->make();
-    dd($user);
+    //$user = factory('App\User')->make();
+    //$account = factory('App\Account')->make();
+    $times_per_year = [1, 2, 3, 4, 6, 12, 24, 52, 365];
     return [
-        'user_id' => $user->id,
+//        'user_id' => $user->id,
         'description' => $faker->sentence(2),
-        'last_due' => Carbon\Carbon::now(),
-        'times_per_year' => $faker->numerify('##'),
+        'last_due' => Carbon\Carbon::now()->subDays($faker->numberBetween(0,60)),
+        'times_per_year' => $faker->randomElement($times_per_year),
         'amount' => $faker->randomFloat(2, 1, 5000),
         'dd' => $faker->numberBetween(0,1),
-        'account_id' => $account->id,
+//        'account_id' => $account->id,
     ];
 });
 

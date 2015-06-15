@@ -4,11 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Account;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Http\Requests\AccountRequest;
+use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class AccountsController
+ * @package App\Http\Controllers
+ */
 class AccountsController extends Controller
 {
+    /**
+     * Ensure users are authenticated before using this controller
+     * @param null $bills
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +31,8 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        $accounts = 'hi';
+        $accounts = Auth::user()->accounts;
+
         return view('accounts.index', compact('accounts'));
     }
 
@@ -27,7 +43,7 @@ class AccountsController extends Controller
      */
     public function create()
     {
-        //
+        return view('accounts.create');
     }
 
     /**
@@ -35,9 +51,13 @@ class AccountsController extends Controller
      *
      * @return Response
      */
-    public function store()
+    public function store(AccountRequest $request)
     {
-        //
+        $account = new Account($request->all());
+dd(Auth::user());
+        Auth::user()->accounts()->save($account);
+
+        return redirect('accounts');
     }
 
     /**
@@ -46,9 +66,9 @@ class AccountsController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    public function show($account)
     {
-        //
+        return view('accounts.show', compact('account'));
     }
 
     /**
@@ -57,9 +77,9 @@ class AccountsController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function edit(Account $account)
     {
-        //
+        return view('accounts.edit', compact('account'));
     }
 
     /**
@@ -68,9 +88,11 @@ class AccountsController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update($id)
+    public function update(Account $account, AccountRequest $request)
     {
-        //
+        $account->update($request->all());
+
+        return redirect('accounts');
     }
 
     /**
@@ -79,8 +101,10 @@ class AccountsController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy($account)
     {
-        //
+        $account->delete();
+
+        return redirect('accounts');
     }
 }
