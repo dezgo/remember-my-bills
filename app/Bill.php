@@ -97,4 +97,18 @@ class Bill extends Model {
         $this->attributes['last_due'] = Carbon::parse($date);
     }
 
+	/**
+     * Pay a bill, then advance the last due date
+     * ensure the last due date is after the date the bill is paid
+     *
+     * @param null $date < date the bill is paid, default to now()
+     */
+    public function pay($date = null)
+    {
+        if ($date == null) $date = Carbon::now();
+        do
+        {
+            $this->last_due = $this->next_due;
+        } while ($this->next_due <= $date);
+    }
 }

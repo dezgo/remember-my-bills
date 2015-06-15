@@ -24,18 +24,37 @@ class AccountsControllerTest extends TestCase
     public function testLifecycle()
     {
         // login
-        $user = new App\User(['name' => 'Derek']);
+        $user = App\User::all()->first();
         $this->be($user);
 
-        // create a new account
+        // go to account creation page
         $this->visit('/accounts/create')
             ->see('Add a new account');
 
-//        Account::shouldReceive('post')
-//            ->once()
-//            ->with()
+        // create a new account but leave off description, validation error
+        $this->type('', 'description')
+            ->press('Add Account')
+            ->seePageIs('/accounts/create')
+            ->see('The description field is required.');
+
+        // create a new account
         $this->type('A new account', 'description')
             ->press('Add Account')
+            ->seePageIs('/accounts');
+
+        // back on accounts page, click edit
+        $this->click('Edit')
+            ->see('Edit: ');
+
+        // now update data and save
+        $this->type('changed account', 'description')
+            ->press('Update Account')
+            ->seePageIs('/accounts');
+
+        // back on accounts page, click edit again (to delete)
+        $this->click('Edit')
+            ->see('Edit: ')
+            ->press('Click to permanently delete this account')
             ->seePageIs('/accounts');
 
     }

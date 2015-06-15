@@ -54,7 +54,7 @@ class AccountsController extends Controller
     public function store(AccountRequest $request)
     {
         $account = new Account($request->all());
-dd(Auth::user());
+
         Auth::user()->accounts()->save($account);
 
         return redirect('accounts');
