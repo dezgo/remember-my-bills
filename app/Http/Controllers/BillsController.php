@@ -121,4 +121,25 @@ class BillsController extends Controller {
 
         return redirect('bills');
 	}
+
+	public function pay($id)
+	{
+		$bill = Bill::findOrFail($id);
+		return view('bills.pay', compact('bill'));
+	}
+
+	public function updateLastDue($id)
+	{
+		$bill = Bill::findOrFail($id);
+		return view('bills.update', compact('bill'));
+	}
+
+	public function markPaid($id)
+	{
+		$bill = Bill::findOrFail($id);
+		$bill->pay();
+		$bill->save();
+
+		return redirect('bills');
+	}
 }

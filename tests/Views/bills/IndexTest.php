@@ -1,9 +1,18 @@
 <?php
 
 use App\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
+/**
+ * Class IndexTest - test all functions of main bills page
+ */
 class IndexTest extends TestCase
 {
+	use DatabaseTransactions;
+
+	/**
+	 * Basic setup for tests
+	 */
 	public function setUp()
 	{
 		parent::setUp();
@@ -11,6 +20,9 @@ class IndexTest extends TestCase
 		$this->be($user);
 	}
 
+	/**
+	 * When you click to edit a bill, you should see the edit page
+	 */
 	public function testEditBill()
 	{
 		$this->visit('')
@@ -18,6 +30,9 @@ class IndexTest extends TestCase
 			->see('Edit:');
 	}
 
+	/**
+	 * When you click on a new bill, you should see the new bill page
+	 */
 	public function testAddNewBill()
 	{
 		$this->visit('')
@@ -25,10 +40,23 @@ class IndexTest extends TestCase
 			->see('Add a new bill');
 	}
 
+	/**
+	 * When you click on accounts you should see the accounts page
+	 */
 	public function testAccounts()
 	{
 		$this->visit('')
 			->click('Accounts')
 			->see('Accounts');
+	}
+
+	/**
+	 * When you click on the pay link, take the user to a pay screen
+	 */
+	public function testPay()
+	{
+		$this->visit('')
+			->click('Pay')
+			->see('Pay: ');
 	}
 }

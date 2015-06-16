@@ -1,13 +1,14 @@
 <?php
 
 use App\Bill;
-use Way\Tests\Factory;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 /**
  * Class BillTest
  */
 class BillTest extends TestCase {
+	use DatabaseTransactions;
 	use Way\Tests\ModelHelpers;
 
 	/**
@@ -24,7 +25,10 @@ class BillTest extends TestCase {
 	public function setUp()
 	{
 		parent::setUp();
-		$this->bill = new Bill;
+		$this->bill = factory('App\Bill')->make([
+			'user_id' => 1,
+			'account_id' => 1,
+		]);
 	}
 
 	/**
@@ -110,11 +114,55 @@ class BillTest extends TestCase {
 		$date = Carbon::create(2015,5,20);
 		$this->bill->last_due = $date;
 		$this->bill->times_per_year = 12;
-		$this->bill->pay(Carbon::now()->subDays(3));
+		$this->bill->pay();
 
 		$expect = $date->addDays(365/12);
 		$actual = $this->bill->last_due;
 
 		$this->assertEquals($expect, $actual);
+	}
+
+	private function _testSeverity($days, $expect)
+	{
+		$knownDate = Carbon::create(2015, 5, 21, 12);
+		Carbon::setTestNow($knownDate);
+		$this->bill->times_per_year = 365;
+
+		$this->bill->last_due = $knownDate->copy()->addDays($days-1);
+		$actual = $this->bill->severity;
+		$this->assertSame($expect, $actual);
+
+		Carbon::setTestNow();
+	}
+
+	/**
+	 * Test severity levels. Should be
+	 * 1: Due in > 14 days
+	 * 2: Due in <= 14 days but > 7 days
+	 * 3: Due in < 7 days
+	 */
+	public function testSeverity15()
+	{
+		$this->_testSeverity(15, 1);
+	}
+
+	public function testSeverity14()
+	{
+		$this->_testSeverity(14, 2);
+	}
+
+	public function testSeverity7()
+	{
+		$this->_testSeverity(7, 2);
+	}
+
+	public function testSeverity6()
+	{
+		$this->_testSeverity(6, 3);
+	}
+
+	public function testSeverityminus6()
+	{
+		$this->_testSeverity(-6, 3);
 	}
 }

@@ -19,10 +19,10 @@
             <th>Auto</th>
             <th>Next Due</th>
             <th>In Days</th>
-            <th>Edit</th>
+            <th>Actions</th>
         </Tr>
     @foreach($bills as $bill)
-        <tr>
+        <tr class="{{ $bill->severityCSS }}">
             <td>{{ $bill->description }}</td>
             <td>{{ $bill->last_due->formatLocalized('%a %d %b %Y') }}</td>
             <td>{{ number_format($bill->amount, 2) }}</td>
@@ -32,7 +32,10 @@
             <td>{{ $bill->dd ? 'Yes' : 'No' }}</td>
             <td>{{ $bill->next_due->formatLocalized('%a %d %b %Y') }}</td>
             <td>{{ $bill->in_days }}</td>
-            <td>{!! Html::link('bills/'.$bill->id.'/edit', 'Edit') !!}</td>
+            <td>
+                {!! Html::link('bills/'.$bill->id.'/edit', 'Edit') !!}
+                {!! Html::link('bills/'.$bill->id.'/pay', 'Pay') !!}
+            </td>
         </tr>
     @endforeach
     </table>

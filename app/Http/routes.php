@@ -24,3 +24,6 @@ Route::resource('bills', 'BillsController');
 Route::bind('bills', function($value, $route) {
 	return App\Bills::whereSlug($value)->first();
 });
+
+Route::get('bills/{id}/pay', 'BillsController@pay');
+Route::patch('bills/{id}/pay', 'BillsController@markPaid');
