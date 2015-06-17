@@ -27,3 +27,5 @@ Route::bind('bills', function($value, $route) {
 
 Route::get('bills/{id}/pay', 'BillsController@pay');
 Route::patch('bills/{id}/pay', 'BillsController@markPaid');
+
+Route::get('/export', 'BillsController@export');
