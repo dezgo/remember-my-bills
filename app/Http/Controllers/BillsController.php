@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Bill;
+use Illuminate\Support\Facades\Validator;
+use Input;
 use App\Http\Requests;
 use App\Http\Requests\BillRequest;
 use Illuminate\Support\Facades\Auth;
@@ -184,21 +186,45 @@ class BillsController extends Controller {
 
     public function import_result()
     {
-        $filename = Input::file('filename');
+		// get all the post data
+        $file = ['csvfile' => Input::file('csvfile')];
 
-        dd($filename);
-//        $filename = $request->filename;
-        $row = 1;
-        if (($handle = fopen($filename, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                $num = count($data);
-                echo "<p> $num fields in line $row: <br /></p>\n";
-                $row++;
-                for ($c=0; $c < $num; $c++) {
-                    echo $data[$c] . "<br />\n";
-                }
-            }
-            fclose($handle);
-        }
+		// establish some validation rules
+		$rules = [
+			'csvfile' => 'required',
+		];
+
+		// now do the validation
+		$validator = Validator::make($file, $rules);
+
+		if ($validator->fails())
+		{
+			return redirect('bills/import')->withInput()->withErrors($validator);
+		}
+		elseif (!Input::file('csvfile')->isValid())
+		{
+			Session::flash('error', 'Uploaded file is not valid');
+			return redirect('bills/import');
+		}
+		else
+		{
+			$destinationPath = 'uploads';
+			$extension = Input::file('csvfile')->getClientOriginalExtension(); // getting image extension
+			$fileName = rand(11111,99999).'.'.$extension; // renaming image
+			Input::file('csvfile')->move($destinationPath, $fileName); // uploading file to given path
+
+			$row = 1;
+			if (($handle = fopen($destinationPath.'/'.$fileName, "r")) !== FALSE) {
+				while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+					$num = count($data);
+					echo "<p> $num fields in line $row: <br /></p>\n";
+					$row++;
+					for ($c=0; $c < $num; $c++) {
+						echo $data[$c] . "<br />\n";
+					}
+				}
+				fclose($handle);
+			}
+		}
     }
 }

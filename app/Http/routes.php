@@ -23,9 +23,9 @@ Route::resource('accounts', 'AccountsController');
 // put this specific stuff first
 Route::get('bills/export', 'BillsController@export');
 Route::get('bills/import', 'BillsController@import');
+Route::put('bills/import_result', 'BillsController@import_result');
 Route::get('bills/{id}/pay', 'BillsController@pay');
 Route::patch('bills/{id}/pay', 'BillsController@markPaid');
-Route::get('bills/import_result', 'BillsController@import_result');
 
 // then the resource route
 Route::resource('bills', 'BillsController');

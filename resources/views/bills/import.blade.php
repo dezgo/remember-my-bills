@@ -5,11 +5,11 @@
 
     <hr/>
 
-    {!! Form::open(['method' => 'PUT', 'action' => 'BillsController@import_result']) !!}
+    {!! Form::open(['method' => 'PUT', 'files' => true, 'action' => 'BillsController@import_result']) !!}
     <!-- Sel Form Input -->
     <div class="from-group">
-        {!! Form::label('filename_label', 'Select file to upload: ') !!}
-        {!! Form::file('filename', ['class' => 'form-control']) !!}
+        {!! Form::label('file', 'Select file to upload: ') !!}
+        {!! Form::file('csvfile', ['class' => 'form-control']) !!}
     </div>
 
     <div class="from-group">
