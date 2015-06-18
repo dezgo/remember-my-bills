@@ -3,6 +3,7 @@
 @section('menu')
         <li><a href="{{ url('bills/create') }}">Add New Bill</a></li>
         <li><a href="{{ url('accounts') }}">Accounts</a></li>
+        <li><a href="{{ url('export') }}">Export</a></li>
 @endsection
 
 @section('content')

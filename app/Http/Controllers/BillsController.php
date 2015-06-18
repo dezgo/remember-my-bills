@@ -122,18 +122,24 @@ class BillsController extends Controller {
         return redirect('bills');
 	}
 
+	/**
+	 * Show the bill pay form
+	 *
+	 * @param $id
+	 * @return \Illuminate\View\View
+	 */
 	public function pay($id)
 	{
 		$bill = Bill::findOrFail($id);
 		return view('bills.pay', compact('bill'));
 	}
 
-	public function updateLastDue($id)
-	{
-		$bill = Bill::findOrFail($id);
-		return view('bills.update', compact('bill'));
-	}
-
+	/**
+	 * Mark the selected bill as paid
+	 *
+	 * @param $id
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+	 */
 	public function markPaid($id)
 	{
 		$bill = Bill::findOrFail($id);
@@ -141,5 +147,29 @@ class BillsController extends Controller {
 		$bill->save();
 
 		return redirect('bills');
+	}
+
+	/**
+	 * Export the list of bills to CSV
+	 *
+	 * @return \Illuminate\View\View
+	 */
+	public function export()
+	{
+		$bills = Auth::user()->bills;
+		$array = [];
+		foreach($bills as $bill)
+		{
+			$bill_array = [
+				'id' => $bill->id,
+				'description' => $bill->description,
+				'last_due' => $bill->last_due,
+				'times_per_year' => $bill->times_per_year,
+				'dd' => $bill->dd,
+				'amount' => $bill->amount,
+			];
+			$array[] = $bill_array;
+		}
+		return view('bills.export', compact('array'));
 	}
 }
