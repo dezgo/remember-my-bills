@@ -20,12 +20,12 @@ Route::controllers([
 
 Route::resource('accounts', 'AccountsController');
 
-Route::resource('bills', 'BillsController');
-Route::bind('bills', function($value, $route) {
-	return App\Bills::whereSlug($value)->first();
-});
-
+// put this specific stuff first
+Route::get('bills/export', 'BillsController@export');
+Route::get('bills/import', 'BillsController@import');
 Route::get('bills/{id}/pay', 'BillsController@pay');
 Route::patch('bills/{id}/pay', 'BillsController@markPaid');
+Route::get('bills/import_result', 'BillsController@import_result');
 
-Route::get('/export', 'BillsController@export');
+// then the resource route
+Route::resource('bills', 'BillsController');

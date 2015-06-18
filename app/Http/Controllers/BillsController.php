@@ -164,12 +164,41 @@ class BillsController extends Controller {
 				'id' => $bill->id,
 				'description' => $bill->description,
 				'last_due' => $bill->last_due,
+                'amount' => $bill->amount,
 				'times_per_year' => $bill->times_per_year,
-				'dd' => $bill->dd,
-				'amount' => $bill->amount,
+                'monthly' => $bill->monthly,
+                'account' => $bill->account->description,
+				'auto' => $bill->dd == 1,
+                'next_due' => $bill->next_due,
+                'in_days' => $bill->indays,
 			];
 			$array[] = $bill_array;
 		}
 		return view('bills.export', compact('array'));
 	}
+
+    public function import()
+    {
+        return view('bills.import');
+    }
+
+    public function import_result()
+    {
+        $filename = Input::file('filename');
+
+        dd($filename);
+//        $filename = $request->filename;
+        $row = 1;
+        if (($handle = fopen($filename, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $num = count($data);
+                echo "<p> $num fields in line $row: <br /></p>\n";
+                $row++;
+                for ($c=0; $c < $num; $c++) {
+                    echo $data[$c] . "<br />\n";
+                }
+            }
+            fclose($handle);
+        }
+    }
 }
