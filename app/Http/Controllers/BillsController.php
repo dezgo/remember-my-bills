@@ -214,18 +214,58 @@ class BillsController extends Controller {
 			$fileName = rand(11111,99999).'.'.$extension; // renaming image
 			Input::file('csvfile')->move($destinationPath, $fileName); // uploading file to given path
 
-			$row = 1;
 			if (($handle = fopen($destinationPath.'/'.$fileName, "r")) !== FALSE) {
-				while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-					$num = count($data);
-					echo "<p> $num fields in line $row: <br /></p>\n";
-					$row++;
-					for ($c=0; $c < $num; $c++) {
-						echo $data[$c] . "<br />\n";
-					}
+				$data_full = [];
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    array_push($data_full, $data);
 				}
 				fclose($handle);
+                $this->import_update($data_full);
 			}
 		}
+    }
+
+    /**
+     * Get the number of the column with the given name
+     *
+     * @param $col_names
+     * @return array
+     */
+    private function get_column_numbers($col_names)
+    {
+        $col_numbers = [];
+        foreach ($col_names as $col_name)
+        {
+            $item = array_search($col_name, $col_names);
+            $col_numbers = array_add($col_numbers, $col_name, $item);
+        }
+        return $col_numbers;
+    }
+
+    private function import_update($bills)
+    {
+        // get the column number for each column based on headings in array element zero
+        $col_numbers = $this->get_column_numbers($bills[0]);
+
+        // now get rid of the first element being column headings
+        array_shift($bills);
+
+        $new = new Bill;
+        foreach($bills as $bill)
+        {
+            $new->user_id = Auth::user()->id;
+            $new->id = $bill[$col_numbers['id']];
+            $new->description = $bill[$col_numbers['description']];
+            $new->last_due = $bill[$col_numbers['last_due']];
+            $new->amount = $bill[$col_numbers['amount']];
+            $new->times_per_year = $bill[$col_numbers['times_per_year']];
+            $new->auto = $bill[$col_numbers['auto']];
+
+            // issue here, we need the account id, not the account description
+            // but the user will upload the description
+            // have to work out how to get ID from description
+            $new->account = $bill[$col_numbers['account']];
+        }
+        dd($new);
     }
 }
