@@ -26,6 +26,7 @@ class RouteServiceProvider extends ServiceProvider {
 
         // use route-model binding
         $router->model('bills', 'App\Bill');
+        $router->model('accounts', 'App\Account');
 	}
 
 	/**

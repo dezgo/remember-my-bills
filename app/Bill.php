@@ -17,7 +17,6 @@ class Bill extends Model {
      */
     protected $fillable = [
 		'description',
-        'account',
 		'last_due',
 		'times_per_year',
 		'account_id',
@@ -68,6 +67,30 @@ class Bill extends Model {
     {
         return $this->next_due->diffForHumans();
     }
+
+    /**
+     * Test severity levels. Should be
+     * 1: Due in > 14 days
+     * 2: Due in <= 14 days but >= 7 days
+     * 3: Due in < 7 days
+     */
+    public function getSeverityAttribute()
+    {
+        if ($this->next_due->gt(Carbon::now()->addDays(14))) return 1;
+        if ($this->next_due->gte(Carbon::now()->addDays(7))) return 2;
+        return 3;
+    }
+
+    public function getSeverityCSSAttribute()
+    {
+        switch ($this->severity)
+        {
+            case 1: return 'success';
+            case 2: return 'warning';
+            case 3: return 'danger';
+        }
+    }
+
 	/**
 	 * A bill is owned by a user
 	 *
@@ -98,4 +121,23 @@ class Bill extends Model {
         $this->attributes['last_due'] = Carbon::parse($date);
     }
 
+    /**
+     * Pay a bill, then advance the last due date
+     *
+     * @param null
+     * @return Payment
+     */
+    public function pay()
+    {
+        $this->last_due = $this->next_due;
+
+        // and return a new payment object
+        $payment = new Payment;
+        $payment->description = $this->description;
+        $payment->user_id = $this->user_id;
+        $payment->payment_date = Carbon::now();
+        $payment->account_id = $this->account_id;
+        $payment->amount = $this->amount;
+        return $payment;
+    }
 }
