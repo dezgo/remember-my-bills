@@ -35,6 +35,13 @@ $factory->define(App\Bill::class, function ($faker) {
     ];
 });
 
+$factory->define(App\Payment::class, function($faker) {
+    return [
+        'description' => $faker->sentence(2),
+        'payment_date' => Carbon\Carbon::now()->subDays($faker->numberBetween(0,60)),
+        'amount' => $faker->randomFloat(2, 1, 5000),
+    ];
+});
 $factory->define(App\Account::class, function ($faker) {
     return [
         'description' => $faker->word,

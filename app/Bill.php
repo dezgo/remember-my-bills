@@ -121,13 +121,23 @@ class Bill extends Model {
         $this->attributes['last_due'] = Carbon::parse($date);
     }
 
-	/**
+    /**
      * Pay a bill, then advance the last due date
      *
      * @param null
+     * @return Payment
      */
     public function pay()
     {
         $this->last_due = $this->next_due;
+
+        // and return a new payment object
+        $payment = new Payment;
+        $payment->description = $this->description;
+        $payment->user_id = $this->user_id;
+        $payment->payment_date = Carbon::now();
+        $payment->account_id = $this->account_id;
+        $payment->amount = $this->amount;
+        return $payment;
     }
 }

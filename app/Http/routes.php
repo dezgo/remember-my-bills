@@ -29,3 +29,5 @@ Route::patch('bills/{id}/pay', 'BillsController@markPaid');
 
 // then the resource route
 Route::resource('bills', 'BillsController');
+
+Route::get('payments', 'PaymentsController@index');

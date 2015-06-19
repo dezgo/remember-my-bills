@@ -5,6 +5,7 @@
         <li><a href="{{ url('accounts') }}">Accounts</a></li>
         <li><a href="{{ url('bills/export') }}">Export</a></li>
         <li><a href="{{ url('bills/import') }}">Import</a></li>
+        <li><a href="{{ url('payments') }}">Payment History</a></li>
 @endsection
 
 @section('content')

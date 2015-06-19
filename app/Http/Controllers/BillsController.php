@@ -145,8 +145,9 @@ class BillsController extends Controller {
 	public function markPaid($id)
 	{
 		$bill = Bill::findOrFail($id);
-		$bill->pay();
+		$payment = $bill->pay();
 		$bill->save();
+        $payment->save();
 
 		return redirect('bills');
 	}
