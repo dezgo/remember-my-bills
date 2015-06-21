@@ -59,4 +59,23 @@ class IndexTest extends TestCase
 			->click('Pay')
 			->see('Pay: ');
 	}
+
+	/**
+	 * When there are no bills, index page should show alert
+	 */
+	public function testNoBillsSomeAccounts()
+	{
+		$user = new App\User([
+			'id' => 9999,
+			'name' => 'Tester',
+			'email' => 'tester@gmail.com',
+			'password' => bcrypt('password'),
+		]);
+		$user->accounts[] = new App\Account([
+			'description' => 'Account1',
+		]);
+		$this->be($user);
+		$this->visit('')
+			->see('Looks like you haven\'t added any bills yet');
+	}
 }

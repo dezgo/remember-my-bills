@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Bill;
+use App\Account;
 use Illuminate\Support\Facades\Validator;
 use Input;
 use App\Http\Requests;
@@ -33,9 +34,16 @@ class BillsController extends Controller {
 	 */
 	public function index()
 	{
-		$bills = Auth::user()->bills->sortBy('next_due');
+		if (Auth::user()->accounts->count() == 0)
+		{
+			return redirect('accounts');
+		}
+		else
+		{
+			$bills = Auth::user()->bills->sortBy('next_due');
 
-        return view('bills.index', compact('bills'));
+			return view('bills.index', compact('bills'));
+		}
 	}
 
 	/**
@@ -188,24 +196,12 @@ class BillsController extends Controller {
         return view('bills.import');
     }
 
-    public function import_result()
+    public function import_result(Requests\ImportBillsRequest $request)
     {
 		// get all the post data
-        $file = ['csvfile' => Input::file('csvfile')];
+        $file = $request->file('csvfile');
 
-		// establish some validation rules
-		$rules = [
-			'csvfile' => 'required',
-		];
-
-		// now do the validation
-		$validator = Validator::make($file, $rules);
-
-		if ($validator->fails())
-		{
-			return redirect('bills/import')->withInput()->withErrors($validator);
-		}
-		elseif (!Input::file('csvfile')->isValid())
+		if (!$file->isValid())
 		{
 			Session::flash('error', 'Uploaded file is not valid');
 			return redirect('bills/import');
@@ -253,11 +249,27 @@ class BillsController extends Controller {
         // now get rid of the first element being column headings
         array_shift($bills);
 
-        $new = new Bill;
+		if (array_has($col_numbers, 'id'))
+		{
+			$new = Bill::findOrFail(['id' => $col_numbers['id']]);
+		}
+		else
+		{
+			$new = new Bill;
+		}
+
+		if (!array_has($col_numbers, 'description')
+		{
+
+		}
+		$new->last_due = $bill[$col_numbers['last_due']];
+		$new->amount = $bill[$col_numbers['amount']];
+		$new->times_per_year = $bill[$col_numbers['times_per_year']];
+		$new->auto = $bill[$col_numbers['auto']];
+
         foreach($bills as $bill)
         {
             $new->user_id = Auth::user()->id;
-            $new->id = $bill[$col_numbers['id']];
             $new->description = $bill[$col_numbers['description']];
             $new->last_due = $bill[$col_numbers['last_due']];
             $new->amount = $bill[$col_numbers['amount']];

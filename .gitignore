@@ -1,4 +1,10 @@
+/bootstrap/compiled.php
 /vendor
-/node_modules
-.env
+composer.phar
+composer.lock
+.env.*.php
+.env.php
+.DS_Store
 .idea/
+_ide_helper.php
+public/uploads/

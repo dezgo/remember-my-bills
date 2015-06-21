@@ -21,9 +21,8 @@ class PasswordController extends Controller {
 	/**
 	 * Create a new password controller instance.
 	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\PasswordBroker  $passwords
-	 * @return void
+	 * @internal param \Illuminate\Contracts\Auth\Guard $auth
+	 * @internal param \Illuminate\Contracts\Auth\PasswordBroker $passwords
 	 */
 	public function __construct()
 	{
