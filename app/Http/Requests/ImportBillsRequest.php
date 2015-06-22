@@ -24,7 +24,7 @@ class ImportBillsRequest extends Request
     public function rules()
     {
         return [
-            'csvfile' => 'required',
+            'csvfile' => 'required|mimes:csv',
         ];
     }
 }

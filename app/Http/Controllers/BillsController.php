@@ -198,30 +198,21 @@ class BillsController extends Controller {
 
     public function import_result(Requests\ImportBillsRequest $request)
     {
-		// get all the post data
         $file = $request->file('csvfile');
 
-		if (!$file->isValid())
-		{
-			Session::flash('error', 'Uploaded file is not valid');
-			return redirect('bills/import');
-		}
-		else
-		{
-			$destinationPath = 'uploads';
-			$extension = Input::file('csvfile')->getClientOriginalExtension(); // getting image extension
-			$fileName = rand(11111,99999).'.'.$extension; // renaming image
-			Input::file('csvfile')->move($destinationPath, $fileName); // uploading file to given path
+        $destinationPath = 'uploads';
+        $extension = $file->getClientOriginalExtension(); // getting file extension
+        $fileName = rand(11111,99999).'.'.$extension; // renaming file
+        $file->move($destinationPath, $fileName); // uploading file to given path
 
-			if (($handle = fopen($destinationPath.'/'.$fileName, "r")) !== FALSE) {
-				$data_full = [];
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    array_push($data_full, $data);
-				}
-				fclose($handle);
-                $this->import_update($data_full);
-			}
-		}
+        if (($handle = fopen($destinationPath.'/'.$fileName, "r")) !== FALSE) {
+            $data_full = [];
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                array_push($data_full, $data);
+            }
+            fclose($handle);
+            $this->import_update($data_full);
+        }
     }
 
     /**
@@ -258,7 +249,7 @@ class BillsController extends Controller {
 			$new = new Bill;
 		}
 
-		if (!array_has($col_numbers, 'description')
+		if (!array_has($col_numbers, 'description'))
 		{
 
 		}
