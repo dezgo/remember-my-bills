@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Contracts\CSV;
-
 class ImportBillsRequest extends Request
 {
     /**
