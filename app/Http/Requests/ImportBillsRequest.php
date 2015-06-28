@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
+use App\Contracts\CSV;
 
 class ImportBillsRequest extends Request
 {
@@ -19,12 +19,13 @@ class ImportBillsRequest extends Request
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param Request $request
      * @return array
      */
     public function rules()
     {
         return [
-            'csvfile' => 'required',
+            'csvfile' => 'required|mimes:test/csv|billimport',
         ];
     }
 }

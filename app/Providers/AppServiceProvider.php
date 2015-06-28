@@ -1,6 +1,9 @@
 <?php namespace App\Providers;
 
+use App\Services\LeagueCSV;
 use Illuminate\Support\ServiceProvider;
+use App\Contracts\CSV;
+use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -11,7 +14,7 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		//
+		Validator::extend('billimport', '\App\Validators\BillsImportValidator@validate');
 	}
 
 	/**
@@ -28,6 +31,10 @@ class AppServiceProvider extends ServiceProvider {
 		$this->app->bind(
 			'Illuminate\Contracts\Auth\Registrar'
 		);
+
+		$this->app->bind(CSV::class, function() {
+			return new LeagueCSV();
+		});
 	}
 
 }

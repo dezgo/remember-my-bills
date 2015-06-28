@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Bill;
-use App\Account;
-use Illuminate\Support\Facades\Validator;
+
 use Input;
 use App\Http\Requests;
 use App\Http\Requests\BillRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Repositories\BillRepositoryInterface;
+use App\Contracts\CSV;
 
 /**
  * Class BillsController
@@ -196,91 +195,9 @@ class BillsController extends Controller {
         return view('bills.import');
     }
 
-    public function import_result(Requests\ImportBillsRequest $request)
+    public function import_result(CSV $csvfile, Requests\ImportBillsRequest $request)
     {
-		// get all the post data
-        $file = $request->file('csvfile');
 
-		if (!$file->isValid())
-		{
-			Session::flash('error', 'Uploaded file is not valid');
-			return redirect('bills/import');
-		}
-		else
-		{
-			$destinationPath = 'uploads';
-			$extension = Input::file('csvfile')->getClientOriginalExtension(); // getting image extension
-			$fileName = rand(11111,99999).'.'.$extension; // renaming image
-			Input::file('csvfile')->move($destinationPath, $fileName); // uploading file to given path
-
-			if (($handle = fopen($destinationPath.'/'.$fileName, "r")) !== FALSE) {
-				$data_full = [];
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    array_push($data_full, $data);
-				}
-				fclose($handle);
-                $this->import_update($data_full);
-			}
-		}
     }
 
-    /**
-     * Get the number of the column with the given name
-     *
-     * @param $col_names
-     * @return array
-     */
-    private function get_column_numbers($col_names)
-    {
-        $col_numbers = [];
-        foreach ($col_names as $col_name)
-        {
-            $item = array_search($col_name, $col_names);
-            $col_numbers = array_add($col_numbers, $col_name, $item);
-        }
-        return $col_numbers;
-    }
-
-    private function import_update($bills)
-    {
-        // get the column number for each column based on headings in array element zero
-        $col_numbers = $this->get_column_numbers($bills[0]);
-
-        // now get rid of the first element being column headings
-        array_shift($bills);
-
-		if (array_has($col_numbers, 'id'))
-		{
-			$new = Bill::findOrFail(['id' => $col_numbers['id']]);
-		}
-		else
-		{
-			$new = new Bill;
-		}
-
-		if (!array_has($col_numbers, 'description')
-		{
-
-		}
-		$new->last_due = $bill[$col_numbers['last_due']];
-		$new->amount = $bill[$col_numbers['amount']];
-		$new->times_per_year = $bill[$col_numbers['times_per_year']];
-		$new->auto = $bill[$col_numbers['auto']];
-
-        foreach($bills as $bill)
-        {
-            $new->user_id = Auth::user()->id;
-            $new->description = $bill[$col_numbers['description']];
-            $new->last_due = $bill[$col_numbers['last_due']];
-            $new->amount = $bill[$col_numbers['amount']];
-            $new->times_per_year = $bill[$col_numbers['times_per_year']];
-            $new->auto = $bill[$col_numbers['auto']];
-
-            // issue here, we need the account id, not the account description
-            // but the user will upload the description
-            // have to work out how to get ID from description
-            $new->account = $bill[$col_numbers['account']];
-        }
-        dd($new);
-    }
 }

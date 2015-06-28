@@ -140,4 +140,22 @@ class Bill extends Model {
         $payment->amount = $this->amount;
         return $payment;
     }
+
+	/**
+     * Return names of columns required when importing bills
+     *
+     * @return array
+     */
+    public static function get_column_names()
+    {
+        return [
+            'id',
+            'description',
+            'last_due',
+            'times_per_year',
+            'account_id',
+            'dd',
+            'amount'
+        ];
+    }
 }
