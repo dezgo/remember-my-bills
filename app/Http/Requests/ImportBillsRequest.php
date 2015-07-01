@@ -23,7 +23,7 @@ class ImportBillsRequest extends Request
     public function rules()
     {
         return [
-            'csvfile' => 'required|mimes:test/csv|billimport',
+            'csvfile' => 'required|mimes:test/csv|HasData|CorrectNumColumns|CorrectColumnNames',
         ];
     }
 }

@@ -4,45 +4,26 @@ namespace App\Validators;
 
 use App\Contracts\CSV;
 use App\Bill;
+use Illuminate\Validation\Validator;
 
-class BillsImportValidator
+class BillsImportValidator extends Validator
 {
 	protected $csvfile;
 	protected $content_raw;
 
-	public function __construct(CSV $csvfile)
+    /**
+     * Grab CSV file and store as local parameter
+     *
+     * @param CSV $csvfile
+     */
+    public function __construct($translator, $data, $rules, $messages)
 	{
-		$this->csvfile = $csvfile;
-	}
-
-	/**
-	 * Validate CSV file contents
-	 *
-	 * @param $field
-	 * @param $value
-	 * @param $parameters
-	 * @return bool
-	 */
-	public function validate($field, $value, $parameters)
-	{
-        $fileName = $this->saveFile($value);
-		$this->content_raw = $this->csvfile->open($fileName)
-										   ->readAll();
-
-		$message = $this->validate_hasData();
-
-		if ($message == '')
-		{
-			$message = $this->validate_correctNumColumns();
-		}
-
-		if ($message == '')
-		{
-			$message = $this->validate_correctColumnNames();
-		}
-
-		return $message == '';
-	}
+        parent::__construct($translator, $data, $rules, $messages);
+        $this->csvfile = \App::make('App\Contracts\CSV');
+        $fileName = $this->saveFile($data['csvfile']);
+        $this->content_raw = $this->csvfile->open($fileName)
+            ->readAll();
+    }
 
 	/**
 	 * Save the file in the input request to the uploads folder
@@ -66,17 +47,24 @@ class BillsImportValidator
 	 *
 	 * @return bool
 	 */
-	private function validate_hasData()
+	public function validateHasData($attribute, $value, $parameters)
 	{
-		return count($this->content_raw) < 2 ? 'CSV must have at least 2 rows' : '';
+		if (count($this->content_raw) < 2) {
+            $this->messages->add('csvfile', 'CSV must have at least 2 rows');
+            return false;
+        }
+        return true;
 	}
 
-	private function validate_correctNumColumns()
+	public function validateCorrectNumColumns($attribute, $value, $parameters)
 	{
 		$expecting = count(Bill::get_column_names());
 		$actual = count($this->content_raw[0]);
-		return $expecting == $actual ? '' :
-			'Incorrect number of columns. Expecting '.$expecting.', got '.$actual;
+		if ($expecting != $actual) {
+            $this->messages->add('csvfile', 'Incorrect number of columns. Expecting ' . $expecting . ', got ' . $actual);
+            return false;
+        }
+        return true;
 	}
 
 	/**
@@ -84,17 +72,17 @@ class BillsImportValidator
 	 *
 	 * @return string
 	 */
-	private function validate_correctColumnNames()
+	public function validateCorrectColumnNames($attribute, $value, $parameters)
 	{
 		foreach ($this->content_raw[0] as $index=>$value)
 		{
 			if (Bill::get_column_names()[$index] != $value)
 			{
-				return 'Column '.$index.': Expecting '.Bill::get_column_names()[$index].
-				', got '.$value;
+                $this->messages->add('csvfile', 'Column '.$index.': Expecting '.Bill::get_column_names()[$index].', got '.$value);
+                return false;
 			}
 		}
 		$this->content_raw = array_shift($this->content_raw);
-		return '';
+		return true;
 	}
 }

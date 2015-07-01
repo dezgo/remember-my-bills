@@ -3,7 +3,6 @@
 use App\Services\LeagueCSV;
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\CSV;
-use Illuminate\Support\Facades\Validator;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -14,7 +13,12 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		Validator::extend('billimport', '\App\Validators\BillsImportValidator@validate');
+        \Validator::resolver(function($translator, $data, $rules, $messages)
+        {
+            //$messages[] = ['validation.correct_num_columns' => 'this is a test'];
+            return new \App\Validators\BillsImportValidator($translator, $data, $rules, $messages);
+        });
+		//Validator::extend('billimport', '\App\Validators\BillsImportValidator@validate');
 	}
 
 	/**
