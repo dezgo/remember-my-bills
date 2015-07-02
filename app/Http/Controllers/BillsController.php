@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Bill;
 
+use App\CSVImportFile;
 use Input;
 use App\Http\Requests;
 use App\Http\Requests\BillRequest;
@@ -195,8 +196,21 @@ class BillsController extends Controller {
         return view('bills.import');
     }
 
-    public function import_result(CSV $csvfile, Requests\ImportBillsRequest $request)
+    public function save_file(CSV $csvfile, Request $request)
     {
+        $fileName = $this->saveFile($request['csvfile']);
+        $content_raw = $csvfile->open($fileName)
+                               ->readAll();
+        $this->import_result($request, $content_raw);
+    }
+
+    public function import_result(Requests\ImportBillsRequest $request)
+    {
+        // basic validation on file type done by laravel validation
+
+        $file = $request['csvfile'];
+        $csvfile = new CSVImportFile($file);
+dd($file);
 
     }
 }

@@ -87,8 +87,9 @@ return [
 	*/
 
 	'custom' => [
-		'attribute-name' => [
-			'rule-name' => 'custom-message',
+		'csvfile' => [
+			'correct_num_columns' => 'Incorrect number of columns',
+            'correct_column_names' => 'Incorrect column names',
 		],
 	],
 
