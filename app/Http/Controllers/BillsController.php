@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Bill;
 
-use Input;
 use App\Http\Requests;
 use App\Http\Requests\BillRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Contracts\CSV;
 
 /**
  * Class BillsController

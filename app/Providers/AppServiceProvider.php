@@ -1,8 +1,10 @@
 <?php namespace App\Providers;
 
 use App\Services\LeagueCSV;
+use App\Services\StdCSVParser;
 use Illuminate\Support\ServiceProvider;
-use App\Contracts\CSV;
+use App\Contracts\CSVReader;
+use App\Contracts\CSVParser;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -36,9 +38,12 @@ class AppServiceProvider extends ServiceProvider {
 			'Illuminate\Contracts\Auth\Registrar'
 		);
 
-		$this->app->bind(CSV::class, function() {
+		$this->app->bind(CSVReader::class, function() {
 			return new LeagueCSV();
 		});
-	}
+
+		$this->app->bind(CSVParser::class, function() {
+			return new StdCSVParser();
+		});	}
 
 }
