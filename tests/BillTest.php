@@ -1,6 +1,5 @@
 <?php
 
-use App\Bill;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 

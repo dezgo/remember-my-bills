@@ -23,6 +23,7 @@ class StdCSVParser implements CSVParser
 
 	/**
 	 * Create an array of bills from the raw data
+	 * note not saving to database here
 	 *
 	 * @param $csv
 	 * @return array
@@ -34,7 +35,6 @@ class StdCSVParser implements CSVParser
 		foreach($csv as $row)
 		{
 			$new = new Bill;
-			$new->user_id = Auth::user()->id;
 			$new->id = $row[0] > 0 ? $row[0] : 0;
 			$new->description = $row[1];
 			$new->last_due = $row[2];
