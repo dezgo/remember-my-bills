@@ -2,21 +2,30 @@
 
 namespace App\Validators;
 
-use App\Contracts\CSV;
 use App\Bill;
 use Illuminate\Validation\Validator;
 
 class BillsImportValidator extends Validator
 {
-    /**
-     * Grab CSV file and store as local parameter
-     *
-     * @param CSV $csvfile
-     */
-    public function __construct($translator, $data, $rules, $messages)
-	{
-        parent::__construct($translator, $data, $rules, $messages);
-    }
+	protected $csvfile;
+	protected $content_raw;
+
+	/**
+	 * Grab CSV file and store as local parameter
+	 *
+	 * @param \Symfony\Component\Translation\TranslatorInterface $translator
+	 * @param array $data
+	 * @param array $rules
+	 * @param array $messages
+	 * @internal param CSV $csvfile
+	 */
+//    public function __construct($translator, $data, $rules, $messages)
+//	{
+//        parent::__construct($translator, $data, $rules, $messages);
+//        $this->csvfile = app('App\Contracts\CSVReader');
+//        $fileName = $this->saveFile($data['csvfile']);
+//        $this->content_raw = $this->csvfile->open($fileName)->readAll();
+//    }
 //
 //	/**
 //	 * Save the file in the input request to the uploads folder
@@ -53,7 +62,6 @@ class BillsImportValidator extends Validator
 //	{
 //		$expecting = count(Bill::get_column_names());
 //		$actual = count($this->content_raw[0]);
-//        $parameters = $actual;
 //		if ($expecting != $actual) {
 //            $this->messages->add('csvfile', 'Incorrect number of columns. Expecting ' . $expecting . ', got ' . $actual);
 //            return false;

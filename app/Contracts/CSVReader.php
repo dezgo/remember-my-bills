@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface CSV
+interface CSVReader
 {
 	public function open($filename);
 

@@ -16,16 +16,14 @@ class ImportBillsRequest extends Request
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @param Request $request
      * @return array
+     * @internal param Request $request
      */
     public function rules()
     {
         //dd($this->files);
         return [
 //            'csvfile' => 'required|mimes:test/csv|HasData|CorrectNumColumns|CorrectColumnNames',
-//            'csvfile' => 'required|mimes:text/csv,application/vnd.ms-excel',
             'csvfile' => 'required',
         ];
     }

@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Bill;
-
 use App\CSVImportFile;
-use Input;
 use App\Http\Requests;
 use App\Http\Requests\BillRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Contracts\CSV;
 
 /**
  * Class BillsController
@@ -20,7 +17,6 @@ class BillsController extends Controller {
     /**
      * Ensure users are authenticated before using this controller
      *
-     * @param BillRepositoryInterface $bills
      */
 	public function __construct()
 	{
