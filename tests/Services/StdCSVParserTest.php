@@ -9,9 +9,10 @@ class StdCSVParserTest extends TestCase
 
 	public function testCreateBills()
 	{
-		$user = new App\User(['id' => 1]);
+		$user = factory('App\User')->create();
+		$user->save();
 		$this->be($user);
-dd($user);
+
 		$parser = app('App\Contracts\CSVParser');
 
 		$csv = [
@@ -25,11 +26,11 @@ dd($user);
 		$expected = 2;
 		$actual = count($bills);
 		$this->assertEquals($expected, $actual);
+		dd($user->bills());
 
 		foreach($bills as $bill)
 		{
-			$user->bills()->save($bill);
+			$user->bills()->create($bill);
 		}
-		dd($bills);
 	}
 }
