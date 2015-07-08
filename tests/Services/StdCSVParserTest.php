@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Auth;
 
 class StdCSVParserTest extends TestCase
 {
@@ -9,8 +8,8 @@ class StdCSVParserTest extends TestCase
 
 	public function testCreateBills()
 	{
-		$user = factory('App\User')->create();
-		$user->save();
+		$user = factory('App\User')->make();
+		$user->save();	// need to do this to generate the user id
 		$this->be($user);
 
 		$parser = app('App\Contracts\CSVParser');

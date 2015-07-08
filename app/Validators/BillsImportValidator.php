@@ -28,23 +28,6 @@ class BillsImportValidator extends Validator
 //    }
 //
 //	/**
-//	 * Save the file in the input request to the uploads folder
-//	 *
-//	 * @param Request $request
-//	 * @return string
-//	 */
-//	private function saveFile($file)
-//	{
-//		$destinationPath = 'uploads';
-//		$extension = $file->getClientOriginalExtension(); // getting file extension
-//		$fileName = rand(11111,99999).'.'.$extension; // renaming file
-//		$file->move($destinationPath, $fileName); // uploading file to given path
-//
-//		return $destinationPath.'/'.$fileName;
-//	}
-//
-//
-//	/**
 //	 * CSV Validator - has at least 2 rows
 //	 *
 //	 * @return bool
