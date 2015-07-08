@@ -16,9 +16,29 @@ class StdCSVParser implements CSVParser
 //		$this->userID = $userID;
 //	}
 
+	private function validate_id($id)
+	{
+		
+	}
+
 	public function validate($csv)
 	{
-		// TODO: Implement validate() method.
+		foreach($csv as $row)
+		{
+			$new = new Bill;
+			$new->id = $row[0] > 0 ? $row[0] : 0;
+			$new->description = $row[1];
+			$new->last_due = $row[2];
+			$new->times_per_year = $row[3];
+			$new->account_id = $row[4];
+			$new->dd = $row[5];
+			$new->amount = $row[6];
+
+			$bills[] = $new;
+			// issue here, we need the account id, not the account description
+			// but ideally the user would upload the description
+			// have to work out how to get ID from description
+		}
 	}
 
 	/**

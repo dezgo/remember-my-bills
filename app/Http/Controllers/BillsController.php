@@ -216,6 +216,7 @@ class BillsController extends Controller {
 		$bills = $parser->createBills($result);
 		foreach($bills as $bill)
 		{
+			dd($bill);
 			Auth::user()->bills()->save($bill);
 		}
 	}

@@ -25,7 +25,6 @@ class StdCSVParserTest extends TestCase
 		$expected = 2;
 		$actual = count($bills);
 		$this->assertEquals($expected, $actual);
-		dd($user->bills());
 
 		foreach($bills as $bill)
 		{
