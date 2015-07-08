@@ -200,13 +200,23 @@ class BillsController extends Controller {
         $this->import_result($request, $content_raw);
     }
 
-    public function import_result(Requests\ImportBillsRequest $request)
+	/**
+	 * Get result of import
+	 *
+	 * @param Requests\ImportBillsRequest $request
+     */
+	public function import_result(Requests\ImportBillsRequest $request)
     {
         // basic validation on file type done by laravel validation
 
-        $file = $request['csvfile'];
-        $csvfile = new CSVImportFile($file);
-dd($file);
+		$file = $request['csvfile'];
+		$result = CSVImportFile::readFile('uploads',$file);
 
-    }
+		$parser = app('App\Contracts\CSVParser');
+		$bills = $parser->createBills($result);
+		foreach($bills as $bill)
+		{
+			Auth::user()->bills()->save($bill);
+		}
+	}
 }

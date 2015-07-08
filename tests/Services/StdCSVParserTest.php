@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Auth;
 
 class StdCSVParserTest extends TestCase
 {
@@ -9,9 +8,10 @@ class StdCSVParserTest extends TestCase
 
 	public function testCreateBills()
 	{
-		$user = new App\User(['id' => 1]);
+		$user = factory('App\User')->make();
+		$user->save();	// need to do this to generate the user id
 		$this->be($user);
-dd($user);
+
 		$parser = app('App\Contracts\CSVParser');
 
 		$csv = [
@@ -30,6 +30,6 @@ dd($user);
 		{
 			$user->bills()->save($bill);
 		}
-		dd($bills);
+
 	}
 }
